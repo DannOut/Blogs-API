@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const usersTable = await queryInterface.createTable("users", {
+    return queryInterface.createTable("users", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -30,6 +30,6 @@ module.exports = {
   },
 
   down: async (queryInterface, _Sequelize) => {
-    return await queryInterface.bulkDelete('users', null, {});
+    return queryInterface.dropTable('users');
   }
 };
