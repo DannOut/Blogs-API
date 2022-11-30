@@ -16,14 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     {
       modelName: 'User',
       tableName: 'users',
-      timeStamps: false,
+      timestamps: false,
       underscored: true,
     }
   );
 
   UserModel.associate = (model) => {
-    UserModel.hasMany(model.BlogPosts, {
-      foreignKey: 'id',
+    UserModel.hasMany(model.BlogPost, {
+      foreignKey: 'userId',
       as: 'BlogPost',
     });
   };
