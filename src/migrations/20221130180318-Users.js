@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const usersTable = queryInterface.createTable("users", {
+    const usersTable = await queryInterface.createTable("users", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,14 +17,19 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      password: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
       image: {
         allowNull: true,
         type: Sequelize.STRING,
       }
-    })
+    });
+    return usersTable;
   },
 
-  down: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('users', null, {});
+  down: async (queryInterface, _Sequelize) => {
+    return await queryInterface.bulkDelete('users', null, {});
   }
 };
