@@ -26,7 +26,6 @@ module.exports = {
         type: Sequelize.STRING,
       }
     });
-    return usersTable;
   },
 
   down: async (queryInterface, _Sequelize) => {

@@ -14,7 +14,6 @@ module.exports = {
         type: Sequelize.STRING,
       },
     });
-    return categoriesTable;
   },
 
   down: async (queryInterface, _Sequelize) => {
