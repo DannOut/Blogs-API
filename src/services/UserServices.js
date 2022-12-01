@@ -7,7 +7,7 @@ const {
 const generateToken = require('../utils/generateToken');
 
 const createLogin = async ({ email }) => {
-  const loginInfo = await User.findAll({ where: { email } });
+  const loginInfo = await User.findOne({ where: { email } });
   const { type, message } = await loginValidation(loginInfo);
 
   if (type) return { type, message };
