@@ -1,20 +1,16 @@
 const { Op } = require('sequelize');
-const { BlogPost, User, PostCategory } = require('../models');
+const { BlogPost, User, PostCategory, Category } = require('../models');
 const { categoriesArrayValidation } = require('./validations');
 
 const createPost = async ({ categoryIds, title, content }, token) => {
   const { type, message } = await categoriesArrayValidation(categoryIds);
   if (type) return { type, message };
 
-  //* TEST
   const { email, displayName } = token.dataValues;
   //* localizando usuário para criar o Post
   const user = await User.findOne({
     where: { [Op.and]: [{ email }, { displayName }] },
   });
-  
-  //! TESTES DA TRYBE NÃO VERIFICA SE EMAIL EXISTE
-  // if (!user) return { type: 'email.notfound', message: 'Some required fields are missing' };
 
   //* criando a postagem
   const creatingPostInfo = await BlogPost.create({ userId: user.id, title, content });
@@ -28,6 +24,18 @@ const createPost = async ({ categoryIds, title, content }, token) => {
   return { type: null, message: creatingPostInfo };
 };
 
+const getAll = async () => {
+const getPosts = await BlogPost.findAll({
+  include: [{ model: User, as: 'user', attributes: { exclude: ['password'] } }, 
+    { model: Category, 
+      as: 'categories', 
+      throught: { attributes: [] } }],
+});
+
+return { type: null, message: getPosts };
+};
+
 module.exports = {
   createPost,
+  getAll,
 };
