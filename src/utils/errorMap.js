@@ -4,7 +4,7 @@ const errorMap = {
   'email.inUse': 409,
   'pk.notFound': 404,
   INVALID_VALUE: 400,
-  test: 404,
+  'email.notfound': 404,
   'catPk.notFound': 400,
 };
 
