@@ -1,7 +1,9 @@
-const loginController = require('./loginController');
-const userController = require('./userController');
+const LoginController = require('./loginController');
+const UserController = require('./userController');
+const CategoryController = require('./categoryController');
 
 module.exports = {
-  loginController,
-  userController,
+  LoginController,
+  UserController,
+  CategoryController,
 };

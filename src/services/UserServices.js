@@ -1,7 +1,9 @@
 const { User } = require('../models');
-const loginValidation = require('./validations/loginValidation');
-const isUserRegistered = require('./validations/isUserRegistered');
-const doesUserExists = require('./validations/doesUserExists');
+const {
+  loginValidation,
+  isUserRegistered,
+  doesUserExists,
+} = require('./validations');
 const generateToken = require('../utils/generateToken');
 
 const createLogin = async ({ email }) => {
@@ -24,15 +26,17 @@ const createUser = async (userInfo) => {
 
 const getAll = async () => {
   const users = await User.findAll({
-  attributes: { exclude: ['password'] },
-});
-return { type: null, message: users };
+    attributes: { exclude: ['password'] },
+  });
+  return { type: null, message: users };
 };
 
 const getUser = async (id) => {
   const { type, message } = await doesUserExists(id);
   if (type) return { type, message };
-  const user = await User.findByPk(id, { attributes: { exclude: ['password'] } });
+  const user = await User.findByPk(id, {
+    attributes: { exclude: ['password'] },
+  });
   return { type: null, message: user };
 };
 
