@@ -9,7 +9,6 @@ module.exports = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: 'Token not found' });
   }
-
   try {
     const payload = jwt.verify(token, JWT_SECRET);
     req.user = payload;

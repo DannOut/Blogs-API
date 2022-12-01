@@ -1,7 +1,8 @@
 const { Op } = require('sequelize');
 const { BlogPost, User, PostCategory, Category } = require('../models');
-const { categoriesArrayValidation, doesPostExists } = require('./validations');
+const { categoriesArrayValidation, doesPostExists, authToUpdate } = require('./validations');
 
+// prettier-ignore
 const createPost = async ({ categoryIds, title, content }, token) => {
   const { type, message } = await categoriesArrayValidation(categoryIds);
   if (type) return { type, message };
@@ -25,30 +26,49 @@ const createPost = async ({ categoryIds, title, content }, token) => {
 };
 
 const getAll = async () => {
-const getPosts = await BlogPost.findAll({
-  include: [{ model: User, as: 'user', attributes: { exclude: ['password'] } }, 
-    { model: Category, 
-      as: 'categories', 
-      throught: { attributes: [] } }],
-});
+  const getPosts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', throught: { attributes: [] } },
+    ],
+  });
 
-return { type: null, message: getPosts };
+  return { type: null, message: getPosts };
 };
 
 const getById = async (id) => {
   const { type, message } = await doesPostExists(id);
   if (type) return { type, message };
   const getPosts = await BlogPost.findByPk(id, {
-    include: [{ model: User, as: 'user', attributes: { exclude: ['password'] } }, 
-      { model: Category, 
-        as: 'categories', 
-        throught: { attributes: [] } }],
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', throught: { attributes: [] } },
+    ],
   });
-return { type: null, message: getPosts };
+  return { type: null, message: getPosts };
+};
+
+const updatePost = async (id, infoToUpdate, token) => {
+  const { type, message } = await authToUpdate(id, token);
+  console.log('TYPE', type);
+  console.log('MESSAGE', message);
+  if (type) return { type, message };
+
+  await BlogPost.update(infoToUpdate, { where: { id } });
+
+  const getPosts = await BlogPost.findByPk(id, {
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', throught: { attributes: [] } },
+    ],
+  });
+
+  return { type: null, message: getPosts };
 };
 
 module.exports = {
   createPost,
   getAll,
   getById,
+  updatePost,
 };

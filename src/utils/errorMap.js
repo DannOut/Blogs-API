@@ -6,6 +6,7 @@ const errorMap = {
   'pkPost.notFound': 404,
   'email.notfound': 404,
   'catPk.notFound': 400,
+  Unauthorized: 401,
   INVALID_VALUE: 400,
 };
 
