@@ -1,6 +1,7 @@
 const errorMap = {
   'any.required': 400,
   'any.invalid': 422,
+  'email.inUse': 409,
   INVALID_VALUE: 400,
 };
 

@@ -1,10 +1,11 @@
 const { User } = require('../models');
 const loginValidation = require('./validations/loginValidation');
+const isUserRegistered = require('./validations/isUserRegistered');
 const generateToken = require('../utils/generateToken');
 
 const createLogin = async ({ email }) => {
   const loginInfo = await User.findAll({ where: { email } });
-  const { type, message } = loginValidation(loginInfo);
+  const { type, message } = await loginValidation(loginInfo);
 
   if (type) return { type, message };
   const token = generateToken(loginInfo);
@@ -12,6 +13,8 @@ const createLogin = async ({ email }) => {
 };
 
 const createUser = async (userInfo) => {
+  const { type, message } = await isUserRegistered(userInfo);
+  if (type) return { type, message };
   await User.create(userInfo);
   const { password, ...values } = userInfo;
   const token = generateToken(values);
