@@ -4,7 +4,6 @@ const {
   categoriesArrayValidation,
   doesPostExists,
   authToUpdate,
-  authTest,
 } = require('./validations');
 
 // prettier-ignore
