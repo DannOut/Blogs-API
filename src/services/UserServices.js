@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, PostCategory, BlogPost } = require('../models');
 const {
   loginValidation,
   isUserRegistered,
@@ -40,9 +40,24 @@ const getUser = async (id) => {
   return { type: null, message: user };
 };
 
+const deleteUser = async (userId) => {
+  console.log('TOKEN', userId);
+
+  const getAllUserPosts = await BlogPost.findAll({ where: { userId } });
+  const filterIdOnly = getAllUserPosts.map(({ id }) => id);
+  await Promise.all(
+    filterIdOnly.map((eachPost) => PostCategory.destroy({ where: { postId: eachPost } })),
+    filterIdOnly.map((eachPost) => BlogPost.destroy({ where: { id: eachPost } })),
+  );
+  await User.destroy({ where: { id: userId } });
+
+  return { type: null };
+};
+
 module.exports = {
   createLogin,
   createUser,
   getAll,
   getUser,
+  deleteUser,
 };
