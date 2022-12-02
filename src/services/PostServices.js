@@ -1,6 +1,11 @@
 const { Op } = require('sequelize');
 const { BlogPost, User, PostCategory, Category } = require('../models');
-const { categoriesArrayValidation, doesPostExists, authToUpdate } = require('./validations');
+const {
+  categoriesArrayValidation,
+  doesPostExists,
+  authToUpdate,
+  authTest,
+} = require('./validations');
 
 // prettier-ignore
 const createPost = async ({ categoryIds, title, content }, token) => {
@@ -50,8 +55,7 @@ const getById = async (id) => {
 
 const updatePost = async (id, infoToUpdate, token) => {
   const { type, message } = await authToUpdate(id, token);
-  console.log('TYPE', type);
-  console.log('MESSAGE', message);
+
   if (type) return { type, message };
 
   await BlogPost.update(infoToUpdate, { where: { id } });
@@ -66,9 +70,23 @@ const updatePost = async (id, infoToUpdate, token) => {
   return { type: null, message: getPosts };
 };
 
+const deletePost = async (id, token) => {
+  const checkPost = await doesPostExists(id);
+  if (checkPost.type) return { type: checkPost.type, message: checkPost.message };
+
+  const auth = await authToUpdate(id, token);
+  if (auth.type) return { type: auth.type, message: auth.message };
+
+  await PostCategory.destroy({ where: { postId: id } });
+  await BlogPost.destroy({ where: { id } });
+
+  return { type: null, message: 'User Deleted' };
+};
+
 module.exports = {
   createPost,
   getAll,
   getById,
   updatePost,
+  deletePost,
 };
