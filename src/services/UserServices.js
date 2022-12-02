@@ -41,8 +41,6 @@ const getUser = async (id) => {
 };
 
 const deleteUser = async (userId) => {
-  console.log('TOKEN', userId);
-
   const getAllUserPosts = await BlogPost.findAll({ where: { userId } });
   const filterIdOnly = getAllUserPosts.map(({ id }) => id);
   await Promise.all(

@@ -82,10 +82,27 @@ const deletePost = async (id, token) => {
   return { type: null, message: 'User Deleted' };
 };
 
+const getByQuery = async (query) => {
+  const getInfo = await BlogPost.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `%${query}%` } },
+        { content: { [Op.like]: `%${query}%` } },
+      ],
+    },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', throught: { attributes: [] } },
+    ],
+  });
+  return { type: null, message: getInfo };
+};
+
 module.exports = {
   createPost,
   getAll,
   getById,
   updatePost,
   deletePost,
+  getByQuery,
 };
