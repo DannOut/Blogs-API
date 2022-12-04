@@ -40,6 +40,7 @@
     "eslint-config-trybe-backend": "1.0.3",
     "eslint-plugin-import": "2.22.1",
     "frisby": "2.1.2",
+    "git-cz": "^4.9.0",
     "jest": "26.0.1",
     "jest-each": "28.0.1",
     "nodemon": "2.0.15",
@@ -47,5 +48,10 @@
     "sequelize-jest-helpers-trybe": "1.0.0",
     "supertest": "4.0.2",
     "wait-on": "6.0.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/git-cz"
+    }
   }
 }

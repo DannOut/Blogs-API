@@ -1,4 +1,4 @@
-const { User, PostCategory, BlogPost } = require('../models');
+const { User, PostCategory, BlogPost, sequelize } = require('../models');
 const {
   loginValidation,
   isUserRegistered,
@@ -43,13 +43,18 @@ const getUser = async (id) => {
 const deleteUser = async (userId) => {
   const getAllUserPosts = await BlogPost.findAll({ where: { userId } });
   const filterIdOnly = getAllUserPosts.map(({ id }) => id);
-  await Promise.all(
-    filterIdOnly.map((eachPost) => PostCategory.destroy({ where: { postId: eachPost } })),
-    filterIdOnly.map((eachPost) => BlogPost.destroy({ where: { id: eachPost } })),
-  );
-  await User.destroy({ where: { id: userId } });
-
-  return { type: null };
+  const transaction = await sequelize.transaction(async (t) => {
+    await Promise.all(
+      filterIdOnly.map((eachPost) => PostCategory
+        .destroy({ where: { postId: eachPost } }, { transaction: t })),
+      filterIdOnly.map((eachPost) => BlogPost
+        .destroy({ where: { id: eachPost } }, { transaction: t })),
+    );
+    await User.destroy({ where: { id: userId } }, { transaction: t });
+  
+    return { type: null };
+  });
+  return transaction;
 };
 
 module.exports = {
