@@ -47,7 +47,6 @@ const deletePost = async (req, res) => {
 const getByQuery = async (req, res) => {
   const { q } = req.query;
   const { type, message } = await PostServices.getByQuery(q);
-  console.log('MESSAGE', message);
   if (type) return res.status(mapError(type)).json({ message });
   res.status(200).json(message);
 };
